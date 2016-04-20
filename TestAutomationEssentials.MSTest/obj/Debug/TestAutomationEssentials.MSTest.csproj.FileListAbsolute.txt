@@ -1,0 +1,11 @@
+C:\Users\ceicysi\Documents\GitHub\TestEssentials\TestAutomationEssentials.MSTest\bin\Debug\TestAutomationEssentials.MSTest.XML
+C:\Users\ceicysi\Documents\GitHub\TestEssentials\TestAutomationEssentials.MSTest\bin\Debug\TestAutomationEssentials.MSTest.dll
+C:\Users\ceicysi\Documents\GitHub\TestEssentials\TestAutomationEssentials.MSTest\bin\Debug\TestAutomationEssentials.MSTest.pdb
+C:\Users\ceicysi\Documents\GitHub\TestEssentials\TestAutomationEssentials.MSTest\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+C:\Users\ceicysi\Documents\GitHub\TestEssentials\TestAutomationEssentials.MSTest\bin\Debug\TestAutomationEssentials.Common.dll
+C:\Users\ceicysi\Documents\GitHub\TestEssentials\TestAutomationEssentials.MSTest\bin\Debug\TestAutomationEssentials.Common.pdb
+C:\Users\ceicysi\Documents\GitHub\TestEssentials\TestAutomationEssentials.MSTest\bin\Debug\TestAutomationEssentials.Common.xml
+C:\Users\ceicysi\Documents\GitHub\TestEssentials\TestAutomationEssentials.MSTest\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.xml
+C:\Users\ceicysi\Documents\GitHub\TestEssentials\TestAutomationEssentials.MSTest\obj\Debug\TestAutomationEssentials.MSTest.csprojResolveAssemblyReference.cache
+C:\Users\ceicysi\Documents\GitHub\TestEssentials\TestAutomationEssentials.MSTest\obj\Debug\TestAutomationEssentials.MSTest.dll
+C:\Users\ceicysi\Documents\GitHub\TestEssentials\TestAutomationEssentials.MSTest\obj\Debug\TestAutomationEssentials.MSTest.pdb

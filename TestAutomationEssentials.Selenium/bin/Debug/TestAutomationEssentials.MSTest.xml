@@ -1,0 +1,502 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>TestAutomationEssentials.MSTest</name>
+    </assembly>
+    <members>
+        <member name="T:TestAutomationEssentials.MSTest.AssertsAggregator">
+            <summary>
+            Performs a sequence of assertions, reporting the results of all of them indenpendently from one another
+            </summary>
+            <remarks>
+            <para>
+            In most cases, after one assertion fails, the test should stop and not continue to the rest of the test. However, there are cases
+            where a test should few related things, even though each can fail indenpendently from one anther. In this case, you can use this class
+            to make sure you get the results of all the assertions and only the first one that fails. For example, If the test should assert that
+            a message box appears with certain text, certain title and a certain icon - each of these assertions are independent from one another
+            even though they validate the result of the same operation.
+            </para>
+            <para>
+            This class evaluates and writes the result of each assertion to the log, immediately when one of the assertion methods is called, but 
+            throws an <see cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException"/> only when <see cref="M:TestAutomationEssentials.MSTest.AssertsAggregator.Dispose"/> is called if one or more assertions have failed. Normally,
+            instead of calling <see cref="M:TestAutomationEssentials.MSTest.AssertsAggregator.Dispose"/> directly, you would use the <code>using</code> keyword.
+            </para>
+            </remarks>
+            <example>
+            using(var asserts = new AssertsAggregator("Message Box")
+            {
+            	asserts.AreEqual("Add customer", () => messageBox.Title, "Title");
+            	asserts.AreEqual("The customer you tried to add already exists", () => messageBox.Text, "Text");
+            	asserts.AreEqual(MessageBoxIcon.Error, () => messageBox.Icon, "Icon");
+            }
+            </example>
+        </member>
+        <member name="M:TestAutomationEssentials.MSTest.AssertsAggregator.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:TestAutomationEssentials.MSTest.AssertsAggregator"/> with the spcified description that is written to the log
+            </summary>
+            <param name="description">The description for the section that is written to the log</param>
+        </member>
+        <member name="M:TestAutomationEssentials.MSTest.AssertsAggregator.Dispose">
+            <summary>
+            Closes the evaluation section in the log and thrown an <see cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException"/> if one of the assertions in it failed.
+            </summary>
+            <exception cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException">One or more of the assertions in the scope failed</exception>
+        </member>
+        <member name="M:TestAutomationEssentials.MSTest.AssertsAggregator.AreEqual``1(``0,System.Func{``0},System.String,System.Object[])">
+            <summary>
+            Verifies that the actual value matches the expected one
+            </summary>
+            <param name="expected">The expected value</param>
+            <param name="getActual">A delegate to a method that returns the actual value</param>
+            <param name="validationMessage">The message that describes the validation, to be written in the log and to be reported in case of a failure</param>
+            <param name="args">Additional format arguments to <paramref name="validationMessage"/></param>
+            <typeparam name="T">The type of the value to compare</typeparam>
+            <remarks>
+            This method calls the method delegated by <paramref name="getActual"/> inside a try/catch clause, so that if either the comparison
+            failed or the <paramref name="getActual"/> method failed, the program continues (mainly to reach the next assertions). The 
+            assertion's result is written to the log (whether it succeeded or failed), and only after <see cref="M:TestAutomationEssentials.MSTest.AssertsAggregator.Dispose"/> is called, an
+            <see cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException"/> exception will be thrown.
+            </remarks>
+        </member>
+        <member name="M:TestAutomationEssentials.MSTest.AssertsAggregator.IsTrue(System.Func{System.Boolean},System.String,System.Object[])">
+            <summary>
+            Verifies the the specified condition is true
+            </summary>
+            <param name="condition">A delegate to a method that evaluates the condition</param>
+            <param name="validationMessage">The message that describes the validation, to be written in the log and to be reported in case of a failure</param>
+            <param name="args">Additional format arguments to <paramref name="validationMessage"/></param>
+            <remarks>
+            This method calls the method delegated by <paramref name="condition"/> inside a try/catch clause, so that if either it returns
+            false or if fails, the program continues (mainly to reach the next assertions). The assertion's result is written to the log 
+            (whether it succeeded or failed), and only after <see cref="M:TestAutomationEssentials.MSTest.AssertsAggregator.Dispose"/> is called, an <see cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException"/> exception 
+            will be thrown.
+            </remarks>
+        </member>
+        <member name="T:TestAutomationEssentials.MSTest.Configuration.ConfigurationBase">
+            <summary>
+            Provides a base class for reading values out of an Xml configuration file
+            </summary>
+            <remarks>
+            Good test projects should be able to run on different environments. For example, with desktop application the path
+            to the application may be different in every developer's machine and the test servers. In web applications or services,
+            the URL of the application or server may be different between different environments. In order to allow that, there's a need
+            to read some values from a configuration file.
+            <para>
+            Note: it's a good practice to keep these files short and simple, and keep it for its mere purpose of supporting different
+            environments. Usualy it should contain only 1-3 parameters, like URL or path, and maybe username/password. Everything that
+            you can deduce or create automatically is better in order to have a simple user and developer experience.
+            </para><para>
+            The XML file supported by this class should have one level of elements under the root, each denotes a single property value.
+            </para><para>
+            Here's a "recipe" for using this class in a way which is robust and user-friendly:
+            1. Define an XSD file that describes the supported properties. You can add &lt;annotation/&gt;s to provide additional 
+            documentation each property. Note that this XSD file will be used by Visual Studio to provide IntelliSense support when
+            editing the XML file
+            2. Create one or more XML file using the previously created XSD. You should store at least one file in Source Control
+            that describes the environment which is used to run the tests in the CI or nightly build. If you have several predefined 
+            environments that you want to run your tests on, you should create one XML file for each of them. Also create one for your own
+            dev environment.
+            3. Create one .testsettings file for each XML file. Add the XML file to the "Deployment Items" section of the .testsettings file.
+            4. Add a class to your project and make it derive from <see cref="T:TestAutomationEssentials.MSTest.Configuration.ConfigurationBase"/>
+            5. Add automatic properties (e.g. <code>public string AppURL { get; set; }</code> for each of parameters in the XML, and 
+            decorate them with the <see cref="T:TestAutomationEssentials.MSTest.Configuration.ConfigurationBase.ConfigurationParameterAttribute"/> attribute, optionally specifying a default value. In case
+            that the default value cannot be specified as a constant, instead of the attribute, call <see cref="M:TestAutomationEssentials.MSTest.Configuration.ConfigurationBase.GetValue(System.Type,System.String,System.Object)"/>
+            and specify the value at run-time.
+            6. Inside the relevant initialization method (e.g. <see cref="M:TestAutomationEssentials.MSTest.TestBase.ClassInitialize"/>), call <see cref="M:TestAutomationEssentials.MSTest.Configuration.TestConfig.Load``1(System.String)"/>
+            specifying the name of the class you've created. Optionally you can store a reference to the returned object in a member 
+            static variable, as the configuration should not change during the entire test run.
+            </para><para>
+            <h2>Running from Visual Studio</h2>
+            When you want to run your tests locally from within Visual Studio, you must use a .testsettings file such as those you created
+            in step 3. The file you should use must refer to the XML file that has the correct values for your local environment (or of the
+            environment that you want to use when running from Visual Studio). You can select the .testsettings file from the menu bar:
+            Test -> Test Settings -> Select Test Settings File.
+            Tip: If every developer in the team needs a different configuration, each one should create or edit the local configuration 
+            file for to match his environment. If you're using TFS, in order to prevent someone from checking-in his file, you (as the 
+            owner of the automation infrastructure) can create a new workspace on your machine with only the folder that contains the XML 
+            file, and check it out with Lock type = "Check In - Allow other users to check out but prevent them from checking in".
+            <h2>Running from command line</h2>
+            If you run the tests using MSTest.exe, you should specify: /testsettings:{your.testsettings}
+            If you run the tests using VSTest.Console.exe, you should specify: /runsettings:{your.testsettings}
+            </para>
+            </remarks>
+        </member>
+        <member name="M:TestAutomationEssentials.MSTest.Configuration.ConfigurationBase.GetValue(System.String)">
+            <summary>
+            Returns a value with the specified element name from the configuration file
+            </summary>
+            <param name="elementName">The name of the element</param>
+            <returns>The value (inner text) of the element as a string, or <b>null</b> if this element is missing</returns>
+        </member>
+        <member name="M:TestAutomationEssentials.MSTest.Configuration.ConfigurationBase.GetValue``1(System.String,``0)">
+            <summary>
+            Returns a value with the specified element name from the configuration file
+            </summary>
+            <typeparam name="T">The type of the value</typeparam>
+            <param name="elementName">The name of the element</param>
+            <param name="defaultvalue">The value (inner text) of the element, or <paramref name="defaultvalue"/> if the element is missing</param>
+            <returns></returns>
+        </member>
+        <member name="P:TestAutomationEssentials.MSTest.Configuration.ConfigurationBase.XmlNamespace">
+            <summary>
+            When overriden in a derived class, returns the XmlNamespace that is used in the XML configuration file.
+            </summary>
+        </member>
+        <member name="T:TestAutomationEssentials.MSTest.Configuration.ConfigurationBase.ConfigurationParameterAttribute">
+            <summary>
+            Marks a property as a configuration parameter
+            </summary>
+            <remarks>
+            Properties marked with that attribute on classes that derive from <see cref="T:TestAutomationEssentials.MSTest.Configuration.ConfigurationBase"/> are automatically
+            set according to their corresponding values in the configuration file upon the call to <see cref="M:TestAutomationEssentials.MSTest.Configuration.TestConfig.Load``1(System.String)"/>.
+            The property can have a private setter.
+            <para>
+            You can specify a default value that will be used if the elemenet does not exist in the configuration file.
+            </para>
+            </remarks>
+        </member>
+        <member name="P:TestAutomationEssentials.MSTest.Configuration.ConfigurationBase.ConfigurationParameterAttribute.DefaultValue">
+            <summary>
+            Gets or sets the default value of the property that will be used in case the element does not exist in the configuration file
+            </summary>
+        </member>
+        <member name="M:TestAutomationEssentials.MSTest.Configuration.ConfigurationBase.ConfigurationParameterAttribute.#ctor">
+            <summary>
+            Initialized as a new instance with <b>null</b> as the default value
+            </summary>
+        </member>
+        <member name="M:TestAutomationEssentials.MSTest.Configuration.ConfigurationBase.ConfigurationParameterAttribute.#ctor(System.Object)">
+            <summary>
+            Initiailized a new instance with the specified default value
+            </summary>
+            <param name="defaultValue"><see cref="P:TestAutomationEssentials.MSTest.Configuration.ConfigurationBase.ConfigurationParameterAttribute.DefaultValue"/></param>
+        </member>
+        <member name="T:TestAutomationEssentials.MSTest.Configuration.TestConfig">
+            <summary>
+            Provides utilities for using Test Configuration files
+            </summary>
+        </member>
+        <member name="M:TestAutomationEssentials.MSTest.Configuration.TestConfig.Load``1(System.String)">
+            <summary>
+            Loads and reads the configuration from the specified file
+            </summary>
+            <param name="filename">The path of the file to load</param>
+            <typeparam name="TConfiguration">The class that exposes the values from the configuration file</typeparam>
+            <returns>A new object of type <typeparamref name="TConfiguration"/> that represents the values that were read from the configuration file</returns>
+        </member>
+        <member name="T:TestAutomationEssentials.MSTest.ExecutionContext.IIsolationScope">
+            <summary>
+            Represents a scope of isolation for tests. Delegates to cleanup actions can be added to the scope at runtime, and they should be called 
+            in reverse order when the scope ends.
+            </summary>
+        </member>
+        <member name="M:TestAutomationEssentials.MSTest.ExecutionContext.IIsolationScope.AddCleanupAction(System.Action)">
+            <summary>
+            Adds a delegate to an action to be called on cleanup
+            </summary>
+            <param name="cleanupAction">The delegate to the action to perform</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="cleanupAction"/> is null</exception>
+        </member>
+        <member name="T:TestAutomationEssentials.MSTest.ExecutionContext.TestExecutionScopesManager">
+            <summary>
+            Managed nestable scopes of isolation. Upon exit from each scope, it calls the cleanup actions that were registered to it during its lifetime
+            </summary>
+            <remarks>
+            If you're using MSTest, you should probably use <see cref="T:TestAutomationEssentials.MSTest.TestBase"/> instead of using this class directly.
+            </remarks>
+        </member>
+        <member name="M:TestAutomationEssentials.MSTest.ExecutionContext.TestExecutionScopesManager.#ctor(System.String,System.Action{TestAutomationEssentials.MSTest.ExecutionContext.IIsolationScope})">
+            <summary>
+            Initializes a new TestExecutionScopesManager object, with one (default) isolation scope
+            </summary>
+            <param name="name">The name of the isolation scope</param>
+            <param name="initialize">A delegate to an action that is performed on initialization. If an exception occurs inside this 
+            method, then the scope is automatically destroyed, calling any cleanup actions that were added during this method</param>
+        </member>
+        <member name="M:TestAutomationEssentials.MSTest.ExecutionContext.TestExecutionScopesManager.AddCleanupAction(System.Action)">
+            <summary>
+            Adds a delegate to an action that will be executed on cleanup
+            </summary>
+            <param name="action">A delegate to the action to perform</param>
+        </member>
+        <member name="M:TestAutomationEssentials.MSTest.ExecutionContext.TestExecutionScopesManager.BeginIsolationScope(System.String,System.Action{TestAutomationEssentials.MSTest.ExecutionContext.IIsolationScope})">
+            <summary>
+            Begins a new, nested, isolation scope
+            </summary>
+            <param name="isolationScopeName">The name of the new isolation scope</param>
+            <param name="initialize">A delegate to an action that is performed on initialization. If an exception occurs inside this 
+            method, then the scope is automatically destroyed, calling any cleanup actions that were added during this method</param>
+        </member>
+        <member name="M:TestAutomationEssentials.MSTest.ExecutionContext.TestExecutionScopesManager.BeginIsolationScope(System.String)">
+            <summary>
+            Begins a new, nested, isolation scope
+            </summary>
+            <param name="isolationScopeName">The name of the new isolation scope</param>
+        </member>
+        <member name="M:TestAutomationEssentials.MSTest.ExecutionContext.TestExecutionScopesManager.EndIsolationScope">
+            <summary>
+            Ends the current isolation scope, calling all cleanup actions that were added to this scope in reverse order
+            </summary>
+        </member>
+        <member name="T:TestAutomationEssentials.MSTest.LoggerAssert">
+            <summary>
+            Wrapper around the <see cref="T:System.Diagnostics.Assert"/> methods, which logs the verification even when it passes
+            </summary>
+        </member>
+        <member name="M:TestAutomationEssentials.MSTest.LoggerAssert.AreEqual``1(``0,``0,System.String,System.Object[])">
+            <summary>
+            Asserts that the actual value equals to the expected one, and writes the verification to the log even when it passes
+            </summary>
+            <param name="expected">The expected value</param>
+            <param name="actual">The actual value</param>
+            <param name="expectationMessage">The message to write to the log and to use in the assertion in case of a failure. Tip: use the word 'should' when you phrase the sentence</param>
+            <param name="args">Additional arguments to the <paramref name="expectationMessage"/></param>
+            <typeparam name="T">The type of the value to compare</typeparam>
+            <exception cref="T:System.ArgumentNullException"><paramref name="expectationMessage"/> or <paramref name="args"/> is null</exception>
+            <exception cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException"><paramref name="actual"/> is not equal to <paramref name="expected"/></exception>
+        </member>
+        <member name="M:TestAutomationEssentials.MSTest.LoggerAssert.AreEqual(System.DateTime,System.DateTime,System.TimeSpan,System.String,System.Object[])">
+            <summary>
+            Asserts that the actual date/time value equals to the expected one, within the specified threshold. Writes the verification to the
+            log even when it passes
+            </summary>
+            <param name="expected">The expected date/time</param>
+            <param name="actual">The actual date/time</param>
+            <param name="threashold">The threshold for the comparison</param>
+            <param name="expectationMessage">The message to write to the log and to use in the assertion in case of a failure. Tip: use the word 'should' when you phrase the sentence</param>
+            <param name="args">Additional arguments to the <paramref name="expectationMessage"/></param>
+            <exception cref="T:System.ArgumentNullException">Either one of <paramref name="expectationMessage"/> or <paramref name="args"/> are null</exception>
+            <exception cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException"><paramref name="actual"/> is not within <paramref name="threashold"/> from <paramref name="expected"/></exception>
+        </member>
+        <member name="M:TestAutomationEssentials.MSTest.LoggerAssert.AreEqual(System.Drawing.Image,System.Drawing.Image,System.String,System.Object[])">
+            <summary>
+            Asserts that the actual image is identical to the expected one. Writes the verification to the log even when it passes.
+            </summary>
+            <param name="expectedImage">The expected image</param>
+            <param name="actualImage">The actual image</param>
+            <param name="expectationMessage">The message to write to the log and to use in the assertion in case of a failure. Tip: use the word 'should' when you phrase the sentence</param>
+            <param name="args">Additional arguments to the <paramref name="expectationMessage"/></param>
+            <exception cref="T:System.ArgumentNullException">One or more of the arguments are null</exception>
+            <exception cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException">The actual image is not identical to the expected one</exception>
+        </member>
+        <member name="M:TestAutomationEssentials.MSTest.LoggerAssert.IsTrue(System.Boolean,System.String,System.Object[])">
+            <summary>
+            Asserts that the specified condition is true, and writes the verification to the log even when it passes
+            </summary>
+            <param name="condition">The condition to evaluate</param>
+            <param name="expectationMessage">The message to write to the log and to use in the assertion in case of a failure. Tip: use the word 'should' when you phrase the sentence</param>
+            <param name="args">Additional arguments to the <paramref name="expectationMessage"/></param>
+            <exception cref="T:System.ArgumentNullException">Either one of <paramref name="expectationMessage"/> or <paramref name="args"/> are null</exception>
+            <exception cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException"><paramref name="condition"/> is false</exception>
+        </member>
+        <member name="M:TestAutomationEssentials.MSTest.LoggerAssert.IsFalse(System.Boolean,System.String,System.Object[])">
+            <summary>
+            Asserts that the specified condition is false, and writes the verification to the log even when it passes
+            </summary>
+            <param name="condition">The condition to evaluate</param>
+            <param name="expectationMessage">The message to write to the log and to use in the assertion in case of a failure. Tip: use the word 'should' when you phrase the sentence</param>
+            <param name="args">Additional arguments to the <paramref name="expectationMessage"/></param>
+            <exception cref="T:System.ArgumentNullException">Either one of <paramref name="expectationMessage"/> or <paramref name="args"/> are null</exception>
+            <exception cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException"><paramref name="condition"/> is false</exception>
+        </member>
+        <member name="M:TestAutomationEssentials.MSTest.LoggerAssert.AreEqual``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0},System.String,System.Object[])">
+            <summary>
+            Asserts that the actual sequence is has the same elements and the same order as the expected one. Writes the verification to the log even when it passes.
+            </summary>
+            <param name="expected">The expected sequence</param>
+            <param name="actual">The actual sequence</param>
+            <param name="expectationMessage">The message to write to the log and to use in the assertion in case of a failure. Tip: use the word 'should' when you phrase the sentence</param>
+            <param name="args">Additional arguments to the <paramref name="expectationMessage"/></param>
+            <exception cref="T:System.ArgumentNullException">One or more of the arguments are null</exception>
+            <exception cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException">The actual sequence has different elements or different order than the expected one</exception>
+        </member>
+        <member name="M:TestAutomationEssentials.MSTest.LoggerAssert.Contains(System.String,System.String,System.String,System.Object[])">
+            <summary>
+            Asserts that the value string contains the substring, and writes the verification to the log even when it passes
+            </summary>
+            <param name="value">The Full string</param>
+            <param name="substring">The substring</param>
+            <param name="validationMessage">The message to write to the log and to use in the assertion in case of a failure. Tip: use the word 'should' when you phrase the sentence</param>
+            <param name="args">Additional arguments to the <paramref name="validationMessage"/></param>
+            <exception cref="T:System.ArgumentNullException">One or more of the arguments are null</exception>
+            <exception cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException">The actual sequence has different elements or different order than the expected one</exception>
+        </member>
+        <member name="T:TestAutomationEssentials.MSTest.UI.TestBase">
+            <summary>
+            Extends <see cref="T:TestAutomationEssentials.MSTest.TestBase"/> for UI tests, that take a screenshot in case of a failure. This is useful for example for Selenium tests.
+            </summary>
+        </member>
+        <member name="M:TestAutomationEssentials.MSTest.UI.TestBase.OnTestFailure(Microsoft.VisualStudio.TestTools.UnitTesting.TestContext)">
+            <summary>
+            This method is called in case of a test failure and takes a screenshot. The screenshot is saved in a file whose name is the full test name with a ".jpg" suffix.
+            </summary>
+            <param name="testContext">Information about the current test</param>
+        </member>
+        <member name="T:TestAutomationEssentials.MSTest.TestBase">
+            <summary>
+            Provides a general base class for tests, with a useful mechanism to handle cleanup as described in http://blogs.microsoft.co.il/arnona/2014/09/02/right-way-test-cleanup/
+            </summary>
+        </member>
+        <member name="F:TestAutomationEssentials.MSTest.TestBase.TestExecutionScopesManager">
+            <summary>
+            Returns the object that manages the nested isolation scopes. You can use this member is you have a need to create your own isolation scopes.
+            </summary>
+        </member>
+        <member name="P:TestAutomationEssentials.MSTest.TestBase.TestContext">
+            <summary>
+            Provides information and utilities related to the current MSTest execution. The setter of this property is used by MSTest - don't call it directly!
+            </summary>
+        </member>
+        <member name="M:TestAutomationEssentials.MSTest.TestBase.#ctor">
+            <summary>
+            Initializes a new instance of TestBase
+            </summary>
+        </member>
+        <member name="M:TestAutomationEssentials.MSTest.TestBase.InitializeTest">
+            <summary>
+            This method should only be called by MSTest. Don't call this method directly!
+            </summary>
+        </member>
+        <member name="M:TestAutomationEssentials.MSTest.TestBase.OnTestFailure(Microsoft.VisualStudio.TestTools.UnitTesting.TestContext)">
+            <summary>
+            Override this method in order to collect data after a test failure, or do any other action that should be performed after a test failure.
+            </summary>
+            <param name="testContext"></param>
+        </member>
+        <member name="M:TestAutomationEssentials.MSTest.TestBase.CleanupTest">
+            <summary>
+            This method should only be called by MSTest. Don't call this method directly!
+            </summary>
+        </member>
+        <member name="M:TestAutomationEssentials.MSTest.TestBase.TestInitialize">
+            <summary>
+            Override this method in order to perform operations that you want to be executed before each test in the derived class
+            </summary>
+        </member>
+        <member name="M:TestAutomationEssentials.MSTest.TestBase.AddCleanupAction(System.Action)">
+            <summary>
+            Adds an action to be performed when the current execution scope ends.
+            </summary>
+            <param name="cleanupAction">A delegate to an action to perform on cleanup</param>
+            <remarks>
+            Actions that are registered with this method are called on cleanup, regardless whether the test passed or failed.
+            You can call this methods any number of times, and the actions will be invoked in reverse order. This is useful because
+            if there's a dependency between actions that you perform in the tests, then usually you must clean them up in the reverse
+            order in order for the cleanup to succeed.
+            Calling this method from the <see cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssemblyInitializeAttribute"/> decorated method, causes the 
+            action to be called when <see cref="M:TestAutomationEssentials.MSTest.TestBase.AssemblyCleanup(System.Object)"/> is called.
+            Calling this method from <see cref="M:TestAutomationEssentials.MSTest.TestBase.ClassInitialize"/> causes the action to be called after all tests in the class
+            have completed (through the call to <see cref="M:TestAutomationEssentials.MSTest.TestBase.ClassCleanup(System.Object)"/>).
+            Calling this method from <see cref="M:TestAutomationEssentials.MSTest.TestBase.TestInitialize"/> or from any test method (decorated with <see cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute"/>)
+            causes the actions to be called after the currently running test ends. Note that if there's an exception inside 
+            <see cref="M:TestAutomationEssentials.MSTest.TestBase.TestInitialize"/>, the test method won't be called, but any cleanup actions that were already been registered
+            will be.
+            </remarks>
+        </member>
+        <member name="M:TestAutomationEssentials.MSTest.TestBase.ClassInitialize">
+            <summary>
+            Override this method in order to initialize the state of the application under tests for all the tests
+            in the current class
+            </summary>
+            <remarks>
+            <para>
+            Note that unlike <see cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.ClassInitializeAttribute"/> decorated methods, this class is not static and
+            therefore can be reused in a base class of few test classes. However, in order for this method to be 
+            called, you must add a <see cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.ClassInitializeAttribute"/> decorated method to the relevant classes
+            and call <see cref="M:TestAutomationEssentials.MSTest.TestBase.ClassInitialize(System.Type)"/> with <code>typeof(YourClassName)</code> as an argument.
+            You also must add a <see cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.ClassCleanupAttribute"/> decorated method and inside of it call
+            <see cref="M:TestAutomationEssentials.MSTest.TestBase.ClassCleanup(System.Object)"/>. Fortunately, if you'll forget any of these, you'll get an error that tell
+            you exactly what is missing :-)
+            </para>
+            <para>
+            IMPORTANT: because this method is not static, you can use instance members in it. While these instance
+            members will be preserved when the test methods (or <see cref="M:TestAutomationEssentials.MSTest.TestBase.TestInitialize"/>) executes, the instance
+            of the class is not actually the same. <see cref="T:TestAutomationEssentials.MSTest.TestBase"/> creates an instance of the class before
+            calling this method, and copies these members to the instance that MSTest creates for each test.
+            This means that you can safely use members that you initialize from this method in test methods, but
+            if you change the value of a member inside a test method, it won't preserve to the next test. In
+            addition, if you pass a reference to <code>this</code> to some other class, it won't be the same
+            instance when the tests run.
+            </para>
+            </remarks>
+        </member>
+        <member name="T:TestAutomationEssentials.MSTest.TestBase.TestInitializeAttribute">
+            <summary>
+            The purpose of this class is to hide the <see cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.TestInitializeAttribute"/>.
+            This attribute is already used internally be <see cref="T:TestAutomationEssentials.MSTest.TestBase"/> and you should not use it directly.
+            Instead, override <see cref="M:TestAutomationEssentials.MSTest.TestBase.TestInitialize"/>.
+            </summary>
+        </member>
+        <member name="T:TestAutomationEssentials.MSTest.TestBase.TestCleanupAttribute">
+            <summary>
+            The purpose of this class is to hide the <see cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.TestClassAttribute"/>.
+            This attribute is already used internally be <see cref="T:TestAutomationEssentials.MSTest.TestBase"/> and you should not use it directly.
+            Instead, call <see cref="M:TestAutomationEssentials.MSTest.TestBase.AddCleanupAction(System.Action)"/> for every action that you want to perform it the
+            test cleanup stage.
+            </summary>
+        </member>
+        <member name="M:TestAutomationEssentials.MSTest.TestBase.AssemblyCleanup(System.Object)">
+            <summary>
+            You must call this method from a <see cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssemblyCleanupAttribute"/> decorated method in order
+            for the cleanup actions that are added inside a <see cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssemblyInitializeAttribute"/> to be called
+            at the right time
+            </summary>
+            <param name="dummy">This argument is not in use. Always pass <b>null</b>. (The purpose of this argument 
+            is to allow you to name your <see cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssemblyCleanupAttribute"/> decorate method "AssemblyCleanup"
+            and avoid ambiguity).
+            </param>
+        </member>
+        <member name="M:TestAutomationEssentials.MSTest.TestBase.ClassInitialize(System.Type)">
+            <summary>
+            You must call this method from a <see cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.ClassCleanupAttribute"/> decorated method in order for
+            <see cref="M:TestAutomationEssentials.MSTest.TestBase.ClassInitialize"/> to be called
+            </summary>
+            <param name="testClass">The type of the current class. Always use the <code>typeof</code> with the
+            current class's name</param>
+        </member>
+        <member name="M:TestAutomationEssentials.MSTest.TestBase.ClassCleanup(System.Object)">
+            <summary>
+            You must call this method from your [ClassCleanup] method in order to ensure proper cleanup of all 
+            relevant actions that were done in the [ClassInitialize] method
+            </summary>
+            <param name="dummy">This argument is not in use. Always pass <b>null</b>. (The purpose of this argument 
+            is to allow you to name your <see cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.ClassCleanupAttribute"/> decorate method "ClassCleanup" and 
+            avoid ambiguity).
+            </param>
+        </member>
+        <member name="T:TestAutomationEssentials.MSTest.TestUtils">
+            <summary>
+            Provide useful methods for tests
+            </summary>
+        </member>
+        <member name="M:TestAutomationEssentials.MSTest.TestUtils.ExpectException``1(System.Action)">
+            <summary>
+            Asserts that the specified exception was thrown by the given action, and returns the exception object 
+            to allow you to further assert on its properties
+            </summary>
+            <typeparam name="TException">The type of the exception you expect the action to throw</typeparam>
+            <param name="action">A delegate to the action that is expected to throw the exception</param>
+            <returns>The caught exception</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="action"/> is null</exception>
+            <exception cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException">No exception of type <typeparamref name="TException"/> was 
+            thrown by <paramref name="action"/></exception>
+        </member>
+        <member name="M:TestAutomationEssentials.MSTest.TestUtils.ExpectException``1(System.Action,System.String,System.Object[])">
+            <summary>
+            Asserts that the specified exception was thrown by the given action, and returns the exception object 
+            to allow you to further assert on its properties. This overload allows you to specify the assertion
+            message and its arguments.
+            </summary>
+            <typeparam name="TException">The type of the exception you expect the action to throw</typeparam>
+            <param name="action">A delegate to the action that is expected to throw the exception</param>
+            <param name="message">The message to use in the assertion in case the exception is not thrown</param>
+            <param name="messageArgs">Format arguments for the assertion messge</param>
+            <returns>The caught exception</returns>
+            <exception cref="T:System.ArgumentNullException">Either <paramref name="action"/>, <paramref name="message"/> or 
+            <paramref name="messageArgs"/> are null</exception>
+            <exception cref="T:Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException">No exception of type <typeparamref name="TException"/> was 
+            thrown by <paramref name="action"/></exception>
+        </member>
+    </members>
+</doc>

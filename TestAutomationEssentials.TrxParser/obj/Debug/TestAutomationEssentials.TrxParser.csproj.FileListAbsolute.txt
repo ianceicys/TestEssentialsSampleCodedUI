@@ -1,0 +1,5 @@
+C:\Users\ceicysi\Documents\GitHub\TestEssentials\TestAutomationEssentials.TrxParser\bin\Debug\TestAutomationEssentials.TrxParser.dll
+C:\Users\ceicysi\Documents\GitHub\TestEssentials\TestAutomationEssentials.TrxParser\bin\Debug\TestAutomationEssentials.TrxParser.pdb
+C:\Users\ceicysi\Documents\GitHub\TestEssentials\TestAutomationEssentials.TrxParser\obj\Debug\TestAutomationEssentials.TrxParser.csprojResolveAssemblyReference.cache
+C:\Users\ceicysi\Documents\GitHub\TestEssentials\TestAutomationEssentials.TrxParser\obj\Debug\TestAutomationEssentials.TrxParser.dll
+C:\Users\ceicysi\Documents\GitHub\TestEssentials\TestAutomationEssentials.TrxParser\obj\Debug\TestAutomationEssentials.TrxParser.pdb

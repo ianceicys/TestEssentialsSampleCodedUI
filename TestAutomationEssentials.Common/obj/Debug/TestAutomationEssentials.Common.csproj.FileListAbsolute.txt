@@ -1,0 +1,6 @@
+C:\Users\ceicysi\Documents\GitHub\TestEssentials\TestAutomationEssentials.Common\bin\Debug\TestAutomationEssentials.Common.XML
+C:\Users\ceicysi\Documents\GitHub\TestEssentials\TestAutomationEssentials.Common\bin\Debug\TestAutomationEssentials.Common.dll
+C:\Users\ceicysi\Documents\GitHub\TestEssentials\TestAutomationEssentials.Common\bin\Debug\TestAutomationEssentials.Common.pdb
+C:\Users\ceicysi\Documents\GitHub\TestEssentials\TestAutomationEssentials.Common\obj\Debug\TestAutomationEssentials.Common.csprojResolveAssemblyReference.cache
+C:\Users\ceicysi\Documents\GitHub\TestEssentials\TestAutomationEssentials.Common\obj\Debug\TestAutomationEssentials.Common.dll
+C:\Users\ceicysi\Documents\GitHub\TestEssentials\TestAutomationEssentials.Common\obj\Debug\TestAutomationEssentials.Common.pdb

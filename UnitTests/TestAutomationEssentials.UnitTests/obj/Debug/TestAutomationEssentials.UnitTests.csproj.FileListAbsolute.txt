@@ -1,0 +1,15 @@
+C:\Users\ceicysi\Documents\GitHub\TestEssentials\UnitTests\TestAutomationEssentials.UnitTests\bin\Debug\TestAutomationEssentials.UnitTests.dll
+C:\Users\ceicysi\Documents\GitHub\TestEssentials\UnitTests\TestAutomationEssentials.UnitTests\bin\Debug\TestAutomationEssentials.UnitTests.pdb
+C:\Users\ceicysi\Documents\GitHub\TestEssentials\UnitTests\TestAutomationEssentials.UnitTests\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+C:\Users\ceicysi\Documents\GitHub\TestEssentials\UnitTests\TestAutomationEssentials.UnitTests\bin\Debug\TestAutomationEssentials.Common.dll
+C:\Users\ceicysi\Documents\GitHub\TestEssentials\UnitTests\TestAutomationEssentials.UnitTests\bin\Debug\TestAutomationEssentials.MSTest.dll
+C:\Users\ceicysi\Documents\GitHub\TestEssentials\UnitTests\TestAutomationEssentials.UnitTests\bin\Debug\TestAutomationEssentials.TrxParser.dll
+C:\Users\ceicysi\Documents\GitHub\TestEssentials\UnitTests\TestAutomationEssentials.UnitTests\bin\Debug\TestAutomationEssentials.Common.pdb
+C:\Users\ceicysi\Documents\GitHub\TestEssentials\UnitTests\TestAutomationEssentials.UnitTests\bin\Debug\TestAutomationEssentials.Common.xml
+C:\Users\ceicysi\Documents\GitHub\TestEssentials\UnitTests\TestAutomationEssentials.UnitTests\bin\Debug\TestAutomationEssentials.MSTest.pdb
+C:\Users\ceicysi\Documents\GitHub\TestEssentials\UnitTests\TestAutomationEssentials.UnitTests\bin\Debug\TestAutomationEssentials.MSTest.xml
+C:\Users\ceicysi\Documents\GitHub\TestEssentials\UnitTests\TestAutomationEssentials.UnitTests\bin\Debug\TestAutomationEssentials.TrxParser.pdb
+C:\Users\ceicysi\Documents\GitHub\TestEssentials\UnitTests\TestAutomationEssentials.UnitTests\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.xml
+C:\Users\ceicysi\Documents\GitHub\TestEssentials\UnitTests\TestAutomationEssentials.UnitTests\obj\Debug\TestAutomationEssentials.UnitTests.csprojResolveAssemblyReference.cache
+C:\Users\ceicysi\Documents\GitHub\TestEssentials\UnitTests\TestAutomationEssentials.UnitTests\obj\Debug\TestAutomationEssentials.UnitTests.dll
+C:\Users\ceicysi\Documents\GitHub\TestEssentials\UnitTests\TestAutomationEssentials.UnitTests\obj\Debug\TestAutomationEssentials.UnitTests.pdb
