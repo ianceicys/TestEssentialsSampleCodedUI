@@ -182,22 +182,52 @@ namespace CalculatorUIWin7Example
         public void Calculator_MenuItem_Help_About_Should_Work()
         {
             //ARRANGE
+            UITestControl winMenuItems = new UITestControl(calcApp);
+            winMenuItems.TechnologyName = "MSAA";
+            winMenuItems.SearchProperties.Add("ControlType", "MenuItem");
+            //Find Matching Controls works, but I have limit the collection to just menuitems
+            //surely there must be a better way with your extension methods?
+            UITestControlCollection winMenuItemsCollection = winMenuItems.FindMatchingControls();
 
-            //UI Control Names
-            WinMenuItem menu_help = calcApp.Find<WinMenuItem>(By.Name("Help"));
-            WinMenuItem menu_aboutcalculator = calcApp.Find<WinMenuItem>(By.Name("About Calculator"));
-            
-            //How would I use FindChildren??
-            //WinMenuItem menu_aboutcalculator = (WinMenuItem)calcApp.FindChildren<WinMenuItem>(By.Name("About Calculator"));
+            foreach (var winMenuItem in winMenuItemsCollection)
+            {
+                if (winMenuItem.FriendlyName == "Help")
+                {
+                    Mouse.Click(winMenuItem);
+                    var childMenuItem = new WinMenuItem(winMenuItem);
 
+                    //I really don't want to have this hiearchy explictly in code, I want to have a
+                    // method that just searches and finds the child control without having to keep 
+                    // track of the hiearchy.
+
+                    childMenuItem.SearchProperties[WinMenuItem.PropertyNames.Name] = "About Calculator";
+                    childMenuItem.SearchConfigurations.Add(SearchConfiguration.ExpandWhileSearching);
+                    childMenuItem.SearchConfigurations.Add(SearchConfiguration.AlwaysSearch);
+                    childMenuItem.Click();
+                }
+
+            }
+            //I really don't want to have maintain the window name changing, here I have to 
+            //add the search properties to include the new window name "About Calculator".
+            //is there some way to get the button to give the window header dynamically?
+
+            calcApp.SearchProperties[WinMenuItem.PropertyNames.Name] = "About Calculator";
+            calcApp.Find<WinButton>(By.Name("OK")).Click();
+
+
+
+            //I'd like to do something like this where I can just Find Child Controls and click them without
+            //having to worry about the hiearchy.
+            //WinMenuItem menu_help = calcApp.Find<WinMenuItem>(By.Name("Help"));
+            //WinMenuItem menu_aboutcalculator = calcApp.Find<WinMenuItem>(By.Name("About Calculator"));
 
             //ACT
-            menu_help.Click();
-            menu_aboutcalculator.SearchProperties[WinMenuItem.PropertyNames.Name] = "About Calculator";
-            menu_aboutcalculator.SearchConfigurations.Add(SearchConfiguration.ExpandWhileSearching);
-            menu_aboutcalculator.SearchConfigurations.Add(SearchConfiguration.AlwaysSearch);
+            ////menu_help.Click();
+            ////menu_aboutcalculator.SearchProperties[WinMenuItem.PropertyNames.Name] = "About Calculator";
+            ////menu_aboutcalculator.SearchConfigurations.Add(SearchConfiguration.ExpandWhileSearching);
+            ////menu_aboutcalculator.SearchConfigurations.Add(SearchConfiguration.AlwaysSearch);
             //Click Never Takes place. 
-            menu_aboutcalculator.Click();
+            ////menu_aboutcalculator.Click();
 
         }
 
@@ -226,7 +256,7 @@ namespace CalculatorUIWin7Example
         //    WinButton calculate = calcApp.Find<WinButton>(By.Name("Calculate"));
         //    WinEdit monthlypayment = calcApp.Find<WinEdit>(By.Name("Monthly payment"));
 
-           
+
         //    //Input values
         //    string purchasepricevalue =      "200000";
         //    string downpaymentvalue =        "10000";
