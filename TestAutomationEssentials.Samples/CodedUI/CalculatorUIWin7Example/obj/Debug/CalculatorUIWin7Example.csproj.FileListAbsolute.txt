@@ -6,3 +6,11 @@ C:\Users\ceicysi\Documents\GitHub\TestEssentials\TestAutomationEssentials.Sample
 C:\Users\ceicysi\Documents\GitHub\TestEssentials\TestAutomationEssentials.Samples\CodedUI\CalculatorUIWin7Example\obj\Debug\CalculatorUIWin7Example.csprojResolveAssemblyReference.cache
 C:\Users\ceicysi\Documents\GitHub\TestEssentials\TestAutomationEssentials.Samples\CodedUI\CalculatorUIWin7Example\obj\Debug\CalculatorUIWin7Example.dll
 C:\Users\ceicysi\Documents\GitHub\TestEssentials\TestAutomationEssentials.Samples\CodedUI\CalculatorUIWin7Example\obj\Debug\CalculatorUIWin7Example.pdb
+C:\Users\ceicysi\Documents\GitHub\TestEssentialsSampleCodedUI\TestAutomationEssentials.Samples\CodedUI\CalculatorUIWin7Example\obj\Debug\CalculatorUIWin7Example.csprojResolveAssemblyReference.cache
+C:\Users\ceicysi\Documents\GitHub\TestEssentialsSampleCodedUI\TestAutomationEssentials.Samples\CodedUI\CalculatorUIWin7Example\obj\Debug\CalculatorUIWin7Example.dll
+C:\Users\ceicysi\Documents\GitHub\TestEssentialsSampleCodedUI\TestAutomationEssentials.Samples\CodedUI\CalculatorUIWin7Example\obj\Debug\CalculatorUIWin7Example.pdb
+C:\Users\ceicysi\Documents\GitHub\TestEssentialsSampleCodedUI\TestAutomationEssentials.Samples\CodedUI\CalculatorUIWin7Example\bin\Debug\CalculatorUIWin7Example.dll
+C:\Users\ceicysi\Documents\GitHub\TestEssentialsSampleCodedUI\TestAutomationEssentials.Samples\CodedUI\CalculatorUIWin7Example\bin\Debug\CalculatorUIWin7Example.pdb
+C:\Users\ceicysi\Documents\GitHub\TestEssentialsSampleCodedUI\TestAutomationEssentials.Samples\CodedUI\CalculatorUIWin7Example\bin\Debug\TestAutomationEssentials.CodedUI.dll
+C:\Users\ceicysi\Documents\GitHub\TestEssentialsSampleCodedUI\TestAutomationEssentials.Samples\CodedUI\CalculatorUIWin7Example\bin\Debug\TestAutomationEssentials.Common.dll
+C:\Users\ceicysi\Documents\GitHub\TestEssentialsSampleCodedUI\TestAutomationEssentials.Samples\CodedUI\CalculatorUIWin7Example\bin\Debug\TestAutomationEssentials.MSTest.dll
