@@ -186,14 +186,17 @@ namespace CalculatorUIWin7Example
             //UI Control Names
             WinMenuItem menu_help = calcApp.Find<WinMenuItem>(By.Name("Help"));
             WinMenuItem menu_aboutcalculator = calcApp.Find<WinMenuItem>(By.Name("About Calculator"));
+            
             //How would I use FindChildren??
             //WinMenuItem menu_aboutcalculator = (WinMenuItem)calcApp.FindChildren<WinMenuItem>(By.Name("About Calculator"));
-            menu_aboutcalculator.SearchProperties[WinMenuItem.PropertyNames.Name] = "About Calculator";
-            menu_aboutcalculator.SearchConfigurations.Add(SearchConfiguration.ExpandWhileSearching);
-            menu_aboutcalculator.SearchConfigurations.Add(SearchConfiguration.AlwaysSearch);
+
 
             //ACT
             menu_help.Click();
+            menu_aboutcalculator.SearchProperties[WinMenuItem.PropertyNames.Name] = "About Calculator";
+            menu_aboutcalculator.SearchConfigurations.Add(SearchConfiguration.ExpandWhileSearching);
+            menu_aboutcalculator.SearchConfigurations.Add(SearchConfiguration.AlwaysSearch);
+            //Click Never Takes place. 
             menu_aboutcalculator.Click();
 
         }
