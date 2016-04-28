@@ -34,7 +34,7 @@ namespace CalculatorUIWin7Example
             Playback.PlaybackSettings.WaitForReadyLevel = WaitForReadyLevel.Disabled;
             Playback.PlaybackSettings.MaximumRetryCount = 10;
             Playback.PlaybackSettings.ShouldSearchFailFast = false;
-            Playback.PlaybackSettings.DelayBetweenActions = 200;
+            Playback.PlaybackSettings.DelayBetweenActions = 300;
             Playback.PlaybackSettings.SearchTimeout = 3000;
             LaunchTheWindowsApp();
             // To generate code for this test, select "Generate Code for Coded UI Test" from the shortcut menu and select one of the menu items.
@@ -208,64 +208,49 @@ namespace CalculatorUIWin7Example
             aboutWinWindow.Find<WinButton>(By.Name("OK")).Click();
         }
 
+        [TestMethod]
+        public void Calculator_Mortgage_CalculateMonthlyPayment_200000_10000_30_5_Equals_1502_Should_EvaluateTrue()
+        {
+            //Data Test values
+            string purchasepricevalue = "200000";
+            string downpaymentvalue = "10000";
+            string termyearsvalue = "30";
+            string interestratevalue = "5";
+            string expectedresult = "791.6666666666667";
+
+            //ACT
+
+            //Menu Actions
+            calcApp.Find<WinMenuItem>(By.Name("View")).Click();
+            calcApp.Find<WinMenuItem>(By.Name("Worksheets")).Click();
+            calcApp.Find<WinMenuItem>(By.Name("Mortgage")).Click();
+            //Click on Combobox
+            calcApp.Find<WinComboBox>(By.Name("Output Field")).Click();
+            //Select Monthly payment in dropdown
+            calcApp.Find<WinListItem>(By.Name("Monthly payment")).Click();
+            //Set Text to test data values
+            calcApp.Find<WinEdit>(By.Name("Purchase Price")).Text = purchasepricevalue;
+            calcApp.Find<WinEdit>(By.Name("Down Payment")).Text = downpaymentvalue;
+            calcApp.Find<WinEdit>(By.Name("Term (years)")).Text = downpaymentvalue;
+            calcApp.Find<WinEdit>(By.Name("Interest rate (%)")).Text = interestratevalue;
+            //Click on Calculate button
+            calcApp.Find<WinButton>(By.Name("Calculate")).Click();
+            //Hover on displayed monthly value to include screenshot in CodedUITest Log
+            Mouse.Hover(calcApp.Find<WinEdit>(By.Name("Monthly payment")));
+            //Set value of monthly payment displayed text.
+            string monthlypayment = calcApp.Find<WinEdit>(By.Name("Monthly payment")).Text;
 
 
+            //ASSERT
 
-        //[TestMethod]
-        //public void Calculator_Mortgage_CalculateMonthlyPayment_200000_10000_30_5_Equals_1502_Should_EvaluateTrue()
-        //{
-        //    //ARRANGE
+            Assert.AreEqual(
+                     expectedresult,
+                     monthlypayment,
+                     "Incorrect Monthly Payment Calculation");
 
-        //    //UI Control Names
-        //    WinMenuItem menu_view = calcApp.Find<WinMenuItem>(By.Name("View"));
-        //    WinMenuItem menu_worksheets = calcApp.Find<WinMenuItem>(By.Name("Worksheets"));
-        //    menu_worksheets.SearchProperties[WinMenuItem.PropertyNames.Name] = "Worksheets";
-        //    menu_worksheets.SearchConfigurations.Add(SearchConfiguration.ExpandWhileSearching);
-        //    WinMenuItem menu_mortgage = calcApp.Find<WinMenuItem>(By.Name("Mortgage"));
-        //    menu_mortgage.SearchConfigurations.Add(SearchConfiguration.ExpandWhileSearching);
-        //    WinMenuItem menu_basic = calcApp.Find<WinMenuItem>(By.Name("Basic	Ctrl+F4"));
-        //    menu_basic.SearchProperties[WinMenuItem.PropertyNames.Name] = "Basic	Ctrl+F4";
-        //    menu_basic.SearchConfigurations.Add(SearchConfiguration.ExpandWhileSearching);
-        //    WinEdit purchaseprice = calcApp.Find<WinEdit>(By.Name("Purchase price"));
-        //    WinEdit downpayment = calcApp.Find<WinEdit>(By.Name("Down payment"));
-        //    WinEdit termyears = calcApp.Find<WinEdit>(By.Name("Term (years)"));
-        //    WinEdit interestrate = calcApp.Find<WinEdit>(By.Name("Interest rate (%)"));
-        //    WinButton calculate = calcApp.Find<WinButton>(By.Name("Calculate"));
-        //    WinEdit monthlypayment = calcApp.Find<WinEdit>(By.Name("Monthly payment"));
+        }
 
 
-        //    //Input values
-        //    string purchasepricevalue =      "200000";
-        //    string downpaymentvalue =        "10000";
-        //    string termyearsvalue =          "30";
-        //    string interestratevalue =       "5";
-        //    string expectedresult =          "1019.961083723064";
-
-        //    //ACT
-        //    menu_view.Click();
-        //    menu_basic.Click();
-        //    //Mouse.Hover(menu_worksheets);
-        //    //menu_worksheets.Click();
-        //    //menu_mortgage.Click();
-        //    //purchaseprice.Text = purchasepricevalue;
-        //    //downpayment.Text = downpaymentvalue;
-        //    //termyears.Text = termyearsvalue;
-        //    //interestrate.Text = interestratevalue;
-        //    //calculate.Click();
-        //    //Mouse.Hover(monthlypayment);
-        //    //menu_view.Click();
-
-
-        //    // ASSERT 
-
-
-
-        //    //Assert Statement at the end of the test
-        //    Assert.AreEqual(
-        //    expectedresult,
-        //    calcApp.Find<WinText>(By.Name("Monthly Payment")).DisplayText,
-        //    "Application returned the incorrect value");
-        //}
 
 
         private void LaunchTheWindowsApp()
