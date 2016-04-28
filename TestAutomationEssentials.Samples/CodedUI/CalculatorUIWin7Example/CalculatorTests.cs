@@ -30,6 +30,12 @@ namespace CalculatorUIWin7Example
         [TestInitialize()]
         public void TestInitialize()
         {
+            //Configure the playback engine to increase test reliability
+            Playback.PlaybackSettings.WaitForReadyLevel = WaitForReadyLevel.Disabled;
+            Playback.PlaybackSettings.MaximumRetryCount = 10;
+            Playback.PlaybackSettings.ShouldSearchFailFast = false;
+            Playback.PlaybackSettings.DelayBetweenActions = 200;
+            Playback.PlaybackSettings.SearchTimeout = 3000;
             LaunchTheWindowsApp();
             // To generate code for this test, select "Generate Code for Coded UI Test" from the shortcut menu and select one of the menu items.
         }
