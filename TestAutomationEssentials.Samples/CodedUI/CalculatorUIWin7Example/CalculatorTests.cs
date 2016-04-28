@@ -230,9 +230,13 @@ namespace CalculatorUIWin7Example
             calcApp.Find<WinListItem>(By.Name("Monthly payment")).Click();
             //Set Text to test data values
             calcApp.Find<WinEdit>(By.Name("Purchase Price")).Text = purchasepricevalue;
+            Mouse.Hover(calcApp.Find<WinEdit>(By.Name("Purchase Price")));
             calcApp.Find<WinEdit>(By.Name("Down Payment")).Text = downpaymentvalue;
+            Mouse.Hover(calcApp.Find<WinEdit>(By.Name("Down Payment")));
             calcApp.Find<WinEdit>(By.Name("Term (years)")).Text = downpaymentvalue;
+            Mouse.Hover(calcApp.Find<WinEdit>(By.Name("Term (years)")));
             calcApp.Find<WinEdit>(By.Name("Interest rate (%)")).Text = interestratevalue;
+            Mouse.Hover(calcApp.Find<WinEdit>(By.Name("Interest rate (%)")));
             //Click on Calculate button
             calcApp.Find<WinButton>(By.Name("Calculate")).Click();
             //Hover on displayed monthly value to include screenshot in CodedUITest Log
